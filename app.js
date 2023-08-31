@@ -1,30 +1,21 @@
 function findPairsWithSum(numbers, targetSum) {
     const seenNumbers = new Set();
-    const pairs = [];
-
-    for (let num of numbers) {
+    return numbers.reduce((pairs, num) => {
         const complement = targetSum - num;
-
-        if (seenNumbers.has(complement)) {
-            pairs.push([num, complement]);
-        }
-
+        if (seenNumbers.has(complement)) pairs.push([num, complement]);
         seenNumbers.add(num);
-    }
-
-    return pairs;
+        return pairs;
+    }, []);
 }
 
-function parseInput(input) {
-    return input.split(',').map(num => parseInt(num));
-}
+const parseInput = input => input.split(',').map(Number);
 
-function printPairs(pairs) {
-    if (pairs.length != 0) {
+const printPairs = pairs => {
+    if (pairs.length) {
         console.log("Pairs found:");
-        pairs.forEach(pair => console.log(`+ ${pair[0]},${pair[1]}`));
+        pairs.forEach(pair => console.log(`+ ${pair.join()}`));
     }
-}
+};
 
 function main(args) {
     if (args.length !== 2) {
@@ -32,17 +23,15 @@ function main(args) {
         return;
     }
 
-    const input = args[0];
-    const target = parseInt(args[1]);
+    const [input, target] = args;
     const numbers = parseInput(input);
 
     try {
-        const pairs = findPairsWithSum(numbers, target);
+        const pairs = findPairsWithSum(numbers, parseInt(target));
         printPairs(pairs);
     } catch (error) {
         console.error("An error occurred:", error.message);
     }
 }
 
-const commandLineArgs = process.argv.slice(2);
-main(commandLineArgs);
+main(process.argv.slice(2));
